@@ -1,16 +1,20 @@
 {
-  "dependencies": {
-    "expo": "~51.0.0",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5"
-  },
-  "main": "App.js",
-  "name": "my-first-expo-app",
+  "name": "04_expo_app",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
+    "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "start": "expo start"
+    "web": "expo start --web"
   },
-  "version": "1.0.0"
+  "dependencies": {
+    "expo": "~54.0.36",
+    "expo-status-bar": "~3.0.9",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-web": "^0.21.0"
+  },
+  "private": true
 }
