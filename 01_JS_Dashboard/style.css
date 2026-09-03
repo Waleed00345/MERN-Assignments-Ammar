@@ -1,0 +1,26 @@
+* { box-sizing: border-box; font-family: system-ui, Arial; }
+body { background:#f3f4f6; margin:0; padding:20px; }
+.container { max-width:1100px; margin:auto; }
+header { display:flex; justify-content:space-between; align-items:center; background:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.counter { font-weight:700; background:#e0f2fe; color:#0369a1; padding:6px 12px; border-radius:20px; }
+.form-section, .search-section { background:#fff; margin-top:16px; padding:16px 20px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+form { display:flex; gap:10px; flex-wrap:wrap; }
+form input { flex:1; min-width:160px; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; }
+form input:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.2); }
+button { padding:10px 18px; border:none; border-radius:8px; background:#2563eb; color:#fff; cursor:pointer; font-weight:600; }
+button:hover { background:#1d4ed8; }
+#searchInput { width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; }
+.filters { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+.filter-btn { background:#e5e7eb; color:#374151; }
+.filter-btn.active { background:#2563eb; color:#fff; }
+.status { text-align:center; margin:20px 0; color:#6b7280; }
+.status.error { color:#dc2626; background:#fee2e2; padding:10px; border-radius:8px; }
+.hidden { display:none; }
+.user-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; margin-top:16px; }
+.user-card { background:#fff; padding:16px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.06); border-left:4px solid #2563eb; display:flex; justify-content:space-between; align-items:center; }
+.user-info h3 { margin:0 0 4px; font-size:16px; }
+.user-info p { margin:2px 0; font-size:13px; color:#6b7280; }
+.delete-btn { background:#ef4444; padding:6px 10px; font-size:13px; }
+.delete-btn:hover { background:#dc2626; }
+.edit-btn { background:#10b981; padding:6px 10px; font-size:13px; margin-right:6px; }
+@media(max-width:600px){ form{flex-direction:column} header{flex-direction:column; gap:8px} }

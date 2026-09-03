@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard v2 - Tailwind</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style type="text/tailwindcss">
+@layer components {
+  .btn-primary { @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 transition; }
+  .card { @apply bg-white p-4 rounded-xl shadow border border-gray-100 hover:shadow-lg transition; }
+  .input-field { @apply border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400; }
+}
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-6">
+<div class="max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="flex justify-between items-center bg-white p-5 rounded-xl shadow mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">User Management Dashboard</h1>
+    <div class="flex items-center gap-3">
+      <span class="bg-blue-100 text-blue-700 font-semibold px-4 py-1.5 rounded-full text-sm">Total: <span id="totalUsers">0</span></span>
+      <button id="darkToggle" class="text-sm border px-3 py-1 rounded-lg">🌙 Dark</button>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="bg-white p-5 rounded-xl shadow mb-6">
+    <form id="userForm" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <input id="name" class="input-field" placeholder="Name" required>
+      <input id="email" type="email" class="input-field" placeholder="Email" required>
+      <input id="course" class="input-field" placeholder="Course (MERN/React)" required>
+      <button type="submit" class="btn-primary">Add User</button>
+    </form>
+  </div>
+
+  <!-- Search -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6 flex flex-col md:flex-row gap-3 justify-between items-center">
+    <input id="searchInput" placeholder="Search by name..." class="input-field md:w-80">
+    <div class="flex gap-2 flex-wrap">
+      <button data-filter="All" class="filter-btn active bg-blue-600 text-white px-3 py-1 rounded-full text-sm">All</button>
+      <button data-filter="MERN" class="filter-btn bg-gray-200 px-3 py-1 rounded-full text-sm">MERN</button>
+      <button data-filter="React" class="filter-btn bg-gray-200 px-3 py-1 rounded-full text-sm">React</button>
+      <button data-filter="Node.js" class="filter-btn bg-gray-200 px-3 py-1 rounded-full text-sm">Node.js</button>
+    </div>
+  </div>
+
+  <div id="loading" class="text-center text-gray-500 py-6">Loading users...</div>
+  <div id="error" class="hidden text-center bg-red-100 text-red-600 p-3 rounded-lg">Unable to load users.</div>
+  <div id="empty" class="hidden text-center text-gray-400 py-6">No users found.</div>
+
+  <div id="userList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

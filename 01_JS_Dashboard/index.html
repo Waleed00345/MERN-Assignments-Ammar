@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management Dashboard - Ammar</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>User Management Dashboard</h1>
+    <div class="counter">Total Users: <span id="totalUsers">0</span></div>
+  </header>
+
+  <section class="form-section">
+    <h2>Add User</h2>
+    <form id="userForm">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="text" id="course" placeholder="Course (e.g. MERN)" required>
+      <button type="submit">Add</button>
+    </form>
+  </section>
+
+  <section class="search-section">
+    <input type="text" id="searchInput" placeholder="Search User by name...">
+    <div class="filters">
+      <button class="filter-btn active" data-filter="All">All</button>
+      <button class="filter-btn" data-filter="MERN">MERN</button>
+      <button class="filter-btn" data-filter="React">React</button>
+      <button class="filter-btn" data-filter="Node.js">Node.js</button>
+      <button class="filter-btn" data-filter="C++">C++</button>
+    </div>
+  </section>
+
+  <div id="loading" class="status">Loading users...</div>
+  <div id="error" class="status error hidden">Unable to load users.</div>
+  <div id="empty" class="status hidden">No users found. Add a new user!</div>
+
+  <div id="userList" class="user-grid"></div>
+</div>
+<script type="module" src="script.js"></script>
+</body>
+</html>

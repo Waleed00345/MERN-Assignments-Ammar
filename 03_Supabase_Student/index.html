@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Records - Supabase</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-[#f5f7f8] min-h-screen p-6 flex flex-col items-center">
+  <div class="w-full max-w-[420px] bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-center font-semibold text-gray-800 text-lg mb-4">Add New Student</h2>
+    <form id="studentForm" class="space-y-3">
+      <input id="fullName" placeholder="Full Name" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <input id="age" type="number" placeholder="Age" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <input id="email" type="email" placeholder="Email" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+      <button type="submit" class="w-full bg-[#2a8fd7] hover:bg-[#1f7ac0] text-white py-2 rounded-md text-sm font-medium transition">Add Student</button>
+    </form>
+    <p id="status" class="text-xs text-center mt-2 text-gray-500"></p>
+  </div>
+
+  <div class="w-full max-w-[420px] mt-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-3 text-center font-semibold text-gray-800 mb-3">Students Data</div>
+    <div id="studentsList" class="space-y-2"></div>
+    <p id="loading" class="text-center text-sm text-gray-400 mt-4">Loading...</p>
+  </div>
+
+<script>
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+let supabaseClient = null;
+let useLocal = true;
+
+// Try to init supabase if keys are replaced
+if(!SUPABASE_URL.includes('YOUR_')){
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  useLocal = false;
+}
+
+let localStudents = JSON.parse(localStorage.getItem('students_supabase')||'[]');
+
+const listEl = document.getElementById('studentsList');
+const loadingEl = document.getElementById('loading');
+const statusEl = document.getElementById('status');
+
+function saveLocal(){ localStorage.setItem('students_supabase', JSON.stringify(localStudents)); }
+
+function render(students){
+  listEl.innerHTML='';
+  if(students.length===0){ listEl.innerHTML='<p class="text-center text-sm text-gray-400">No students yet</p>'; return; }
+  listEl.innerHTML = students.map(s=>`
+    <div class="bg-white rounded-md border-l-[3px] border-l-[#2a8fd7] shadow-sm flex justify-between items-center px-3 py-2.5">
+      <div>
+        <p class="text-sm font-semibold text-gray-800 leading-tight">${s.full_name || s.name}</p>
+        <p class="text-[11px] text-gray-500">Age: ${s.age} | Email: ${s.email}</p>
+      </div>
+      <button data-id="${s.id}" class="deleteBtn bg-[#e74c3c] hover:bg-[#c0392b] text-white text-[11px] px-3 py-1 rounded">Delete</button>
+    </div>
+  `).join('');
+}
+
+async function fetchStudents(){
+  loadingEl.style.display='block';
+  if(useLocal){
+    // simulate delay like screenshot
+    await new Promise(r=>setTimeout(r,300));
+    render(localStudents);
+  } else {
+    const {data, error} = await supabaseClient.from('students').select('*').order('created_at',{ascending:false});
+    if(error){ statusEl.textContent='Supabase error: '+error.message; render(localStudents); }
+    else render(data);
+  }
+  loadingEl.style.display='none';
+}
+
+async function addStudent(e){
+  e.preventDefault();
+  const full_name = document.getElementById('fullName').value.trim();
+  const age = parseInt(document.getElementById('age').value);
+  const email = document.getElementById('email').value.trim();
+  if(!full_name||!age||!email) return;
+  statusEl.textContent='Adding...';
+  if(useLocal){
+    const newStudent = {id: Date.now().toString(), full_name, age, email};
+    localStudents = [newStudent, ...localStudents];
+    saveLocal();
+    render(localStudents);
+    statusEl.textContent='Added locally (add Supabase keys for cloud sync)';
+  } else {
+    const {data, error} = await supabaseClient.from('students').insert([{full_name, age, email}]).select();
+    if(error) statusEl.textContent=error.message;
+    else { statusEl.textContent='Student added!'; fetchStudents(); }
+  }
+  e.target.reset();
+}
+
+async function deleteStudent(id){
+  if(useLocal){
+    localStudents = localStudents.filter(s=>s.id!==id);
+    saveLocal();
+    render(localStudents);
+  } else {
+    const {error} = await supabaseClient.from('students').delete().eq('id', id);
+    if(error) alert(error.message); else fetchStudents();
+  }
+}
+
+document.getElementById('studentForm').addEventListener('submit', addStudent);
+listEl.addEventListener('click', e=>{
+  if(e.target.classList.contains('deleteBtn')) deleteStudent(e.target.dataset.id);
+});
+
+fetchStudents();
+
+// Expose instructions in console
+console.log('To connect real Supabase: create table students (id uuid default gen_random_uuid() primary key, full_name text, age int, email text, created_at timestamp default now()); then replace YOUR_SUPABASE_URL and KEY');
+</script>
+</body>
+</html>
